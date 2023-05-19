@@ -2,9 +2,8 @@ import datetime as dt
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from database import db
-
-from api.utils import generate_uuid
+from app.database import db
+from app.utils import generate_uuid
 
 
 class Soldier(db.Model):

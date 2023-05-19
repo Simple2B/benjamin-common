@@ -1,8 +1,9 @@
-from database import db
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from app.utils import generate_uuid
+from app.database import db
+
+from .utils import generate_uuid
 
 
 class CemeteryAudioTour(db.Model):
