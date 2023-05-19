@@ -6,7 +6,7 @@ from sqlalchemy import orm
 
 from api.utils import generate_uuid
 from api.hash_utils import make_hash
-from database import db
+from app.database import db
 
 
 class UserRoles(enum.Enum):
