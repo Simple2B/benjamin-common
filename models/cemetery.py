@@ -1,5 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
+from sqlalchemy.ext.hybrid import hybrid_property
+
 
 from app.database import db
 
@@ -33,8 +35,12 @@ class Cemetery(db.Model):
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
-    war_id = orm.mapped_column(sa.ForeignKey("wars.id"))
-    war = orm.relationship("War", viewonly=True)
+    war_id = orm.mapped_column(sa.ForeignKey("wars.id"), nullable=True)
+    _war = orm.relationship("War", viewonly=True)
+
+    @hybrid_property
+    def war(self):
+        return self._war.name
 
     audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
         "CemeteryAudioTour",
