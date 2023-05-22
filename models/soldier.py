@@ -2,7 +2,7 @@ import datetime as dt
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from database import db
+from app.database import db
 
 from .utils import generate_uuid
 

@@ -4,8 +4,9 @@ import datetime as dt
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from .utils import generate_uuid, make_hash
 from app.database import db
+
+from .utils import generate_uuid, make_hash
 
 
 class UserRoles(enum.Enum):
