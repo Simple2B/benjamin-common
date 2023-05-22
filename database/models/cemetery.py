@@ -26,7 +26,7 @@ class War(db.Model):
     __tablename__ = "wars"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(254), nullable=True)
+    name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
 
 
 class Cemetery(db.Model):
@@ -38,7 +38,12 @@ class Cemetery(db.Model):
         default=generate_uuid,
         index=True,
     )
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(64))
+    name: orm.Mapped[str] = orm.mapped_column(
+        sa.String(64),
+        nullable=False,
+        unique=True,
+        index=True,
+    )
     location: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True)
@@ -51,7 +56,7 @@ class Cemetery(db.Model):
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     war_id = orm.mapped_column(sa.ForeignKey("wars.id"))
-    war = orm.relationship("War")
+    war = orm.relationship("War", viewonly=True)
 
     audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
         "CemeteryAudioTour",
