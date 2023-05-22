@@ -3,6 +3,7 @@ from sqlalchemy import orm
 
 from app.database import db
 
+
 class War(db.Model):
     __tablename__ = "wars"
 
