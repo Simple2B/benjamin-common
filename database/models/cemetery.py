@@ -1,8 +1,8 @@
-from database import db
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from app.utils import generate_uuid
+from app.database import db
+from .utils import generate_uuid
 
 
 class CemeteryAudioTour(db.Model):
@@ -22,6 +22,13 @@ class CemeteryAudioTour(db.Model):
     )
 
 
+class War(db.Model):
+    __tablename__ = "wars"
+
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    name: orm.Mapped[str] = orm.mapped_column(sa.String(254), nullable=True)
+
+
 class Cemetery(db.Model):
     __tablename__ = "cemeteries"
 
@@ -31,8 +38,8 @@ class Cemetery(db.Model):
         default=generate_uuid,
         index=True,
     )
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(254), nullable=True)
-    location: orm.Mapped[str] = orm.mapped_column(sa.String(254), nullable=True)
+    name: orm.Mapped[str] = orm.mapped_column(sa.String(64))
+    location: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True)
     longitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True)
@@ -42,9 +49,11 @@ class Cemetery(db.Model):
     url_path: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
-    war: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
-    autdio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
+    war_id = orm.mapped_column(sa.ForeignKey("wars.id"))
+    war = orm.relationship("War")
+
+    audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
         "CemeteryAudioTour",
         cascade="all, delete",
         lazy="dynamic",

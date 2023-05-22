@@ -4,7 +4,7 @@ from sqlalchemy import orm
 
 from database import db
 
-from api.utils import generate_uuid
+from .utils import generate_uuid
 
 
 class Soldier(db.Model):
