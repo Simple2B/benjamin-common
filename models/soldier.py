@@ -3,7 +3,8 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.database import db
-from app.utils import generate_uuid
+
+from .utils import generate_uuid
 
 
 class Soldier(db.Model):
