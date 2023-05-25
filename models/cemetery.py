@@ -4,12 +4,13 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 
 from app.database import db
+from app import schema as s
 
-from .utils import generate_uuid
+from .utils import generate_uuid, ModelMixin
 from .cemetery_audio_tour import CemeteryAudioTour
 
 
-class Cemetery(db.Model):
+class Cemetery(db.Model, ModelMixin):
     __tablename__ = "cemeteries"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -31,7 +32,7 @@ class Cemetery(db.Model):
 
     phone: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
     email: orm.Mapped[str] = orm.mapped_column(sa.String(320), nullable=True)
-    url_path: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
+    web_url: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
@@ -51,3 +52,8 @@ class Cemetery(db.Model):
             viewonly=True,
         ),
     )
+
+    @property
+    def json(self):
+        data = s.Cemetery.from_orm(self)
+        return data.json(by_alias=True)
