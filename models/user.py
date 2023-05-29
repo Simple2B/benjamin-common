@@ -1,6 +1,6 @@
 import enum
-import typing as t
-import datetime as dt
+from typing import Self
+from datetime import datetime
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -32,8 +32,8 @@ class User(db.Model, ModelMixin, BaseUser):
     )
     password_hash: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     role: orm.Mapped[Role] = orm.mapped_column(sa.Enum(Role), default=Role.USER)
-    created_at: orm.Mapped[dt.datetime] = orm.mapped_column(
-        sa.DateTime, default=dt.datetime.utcnow
+    created_at: orm.Mapped[datetime] = orm.mapped_column(
+        sa.DateTime, default=datetime.utcnow
     )
     unique_id: orm.Mapped[str] = orm.mapped_column(
         sa.String(36),
@@ -53,7 +53,7 @@ class User(db.Model, ModelMixin, BaseUser):
         self.password_hash = make_hash(value)
 
     @classmethod
-    def search(cls, db: orm.Session, login: str) -> t.Self:
+    def search(cls, db: orm.Session, login: str) -> Self:
         query = cls.select().where(
             sa.func.lower(cls.username)
             == sa.func.lower(login) | sa.func.lower(cls.email)
