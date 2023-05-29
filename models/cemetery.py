@@ -46,7 +46,6 @@ class Cemetery(db.Model, ModelMixin):
     audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
         "CemeteryAudioTour",
         cascade="all, delete",
-        lazy="dynamic",
         backref=orm.backref(
             "cemetery",
             viewonly=True,
