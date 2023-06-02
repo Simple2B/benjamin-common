@@ -43,7 +43,11 @@ class Cemetery(db.Model, ModelMixin):
     def war(self):
         return self._war.name
 
-    audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
+    @property
+    def audio_tours(self):
+        return [tour.aws_filepath for tour in self._audio_tours]
+
+    _audio_tours: orm.Mapped[CemeteryAudioTour] = orm.relationship(
         "CemeteryAudioTour",
         lazy="select",
         cascade="all, delete",
