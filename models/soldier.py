@@ -3,11 +3,15 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.database import db
+from app import schema as s
 
-from .utils import generate_uuid
+from .soldier_award import SoldierAward
+from .soldier_photo import SoldierPhoto
+
+from .utils import generate_uuid, ModelMixin
 
 
-class Soldier(db.Model):
+class Soldier(db.Model, ModelMixin):
     __tablename__ = "soldiers"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -18,57 +22,95 @@ class Soldier(db.Model):
     )
     cemetery_id = orm.mapped_column(sa.ForeignKey("cemeteries.id"), nullable=True)
 
-    description: orm.Mapped[str] = orm.mapped_column(sa.String(254))
-    address: orm.Mapped[str] = orm.mapped_column(sa.String(124))
-    rank: orm.Mapped[str] = orm.mapped_column(sa.String(124))
-    first_name: orm.Mapped[str] = orm.mapped_column(sa.String(124))
-    last_name: orm.Mapped[str] = orm.mapped_column(sa.String(124))
-    birth_date: orm.Mapped[dt.date] = orm.mapped_column(sa.Date, nullable=True)
+    service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    first_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    last_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=False)
+
+    birth_date: orm.Mapped[dt.date] = orm.mapped_column(sa.Date, nullable=False)
+    birth_location: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
+
     death_date: orm.Mapped[dt.date] = orm.mapped_column(sa.Date, nullable=True)
-    birth_location: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    service_number: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    service_state: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    assignment: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    awards: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
-    position: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    service_card: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-
     death_circumstance: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
+        sa.String(256), nullable=True
     )
+
+    awards: orm.Mapped[SoldierAward] = orm.relationship(
+        "SoldierAward",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "soldier",
+            viewonly=True,
+        ),
+    )
+    # AWS Files
+    photos: orm.Mapped[SoldierPhoto] = orm.relationship(
+        "SoldierPhoto",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "soldier",
+            viewonly=True,
+        ),
+    )
+
+    @property
+    def photo_paths(self):
+        return [photo.aws_filepath for photo in self.photos]
+
+    soldier_audio_tour: orm.Mapped[str] = orm.mapped_column(
+        sa.String(256),
+        nullable=True,
+    )
+
+    kia_telegram: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+    replacement_ceremony_video: orm.Mapped[str] = orm.mapped_column(
+        sa.String(256), nullable=True
+    )
+
+    # Burial location
+    burial_location_name: orm.Mapped[str] = orm.mapped_column(
+        sa.String(124),
+        nullable=True,
+    )
+
+    burial_location_latitude: orm.Mapped[str] = orm.mapped_column(
+        sa.Float,
+        nullable=True,
+    )
+    burial_location_longitude: orm.Mapped[str] = orm.mapped_column(
+        sa.Float,
+        nullable=True,
+    )
+
+    @property
+    def burial_location(self):
+        return {
+            "name": self.burial_location_name,
+            "longitude": self.burial_location_longitude,
+            "latitude": self.burial_location_latitude,
+        }
+
+    state_entered_service_from: orm.Mapped[str] = orm.mapped_column(
+        sa.String(64), nullable=True
+    )
+    assignment: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
+    position: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
+
+    jewish_servicemans_card: orm.Mapped[str] = orm.mapped_column(
+        sa.String(256), nullable=True
+    )
+
     initial_burial_location: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
+        sa.String(64), nullable=True
     )
+
     final_burial_location: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
-    )
-    tablet_of_missing: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
-    )
-    telegram_pdf: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
-    change_ceremony_link: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
+        sa.String(64), nullable=True
     )
 
-
-class SoldierMessage(db.Model):
-    __tablename__ = "soldier_messages"
-
-    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    uuid: orm.Mapped[str] = orm.mapped_column(
-        sa.String(36),
-        default=generate_uuid,
-        index=True,
-    )
-
-    message_text: orm.Mapped[str] = orm.mapped_column(sa.String(256))
-    reply_email: orm.Mapped[str] = orm.mapped_column(sa.String(124))
-
-    soldier_id: orm.Mapped[int] = orm.mapped_column(
-        sa.ForeignKey("soldiers.id"), nullable=False
-    )
-
-
-# class SoldierAudio(db.Model):
-#     ...
+    @property
+    def json(self):
+        data = s.Soldier.from_orm(self)
+        return data.json(by_alias=True)
