@@ -32,7 +32,7 @@ class Cemetery(db.Model, ModelMixin):
 
     phone: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
     email: orm.Mapped[str] = orm.mapped_column(sa.String(320), nullable=True)
-    web_url: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
+    web_url: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
