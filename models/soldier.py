@@ -55,14 +55,18 @@ class Soldier(db.Model, ModelMixin):
         ),
     )
 
+    @property
+    def photo_paths(self):
+        return [photo.aws_filepath for photo in self.photos]
+
     soldier_audio_tour: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124),
+        sa.String(256),
         nullable=True,
     )
 
-    kia_telegram: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=True)
+    kia_telegram: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
     replacement_ceremony_video: orm.Mapped[str] = orm.mapped_column(
-        sa.String(124), nullable=True
+        sa.String(256), nullable=True
     )
 
     # Burial location
@@ -95,7 +99,7 @@ class Soldier(db.Model, ModelMixin):
     position: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
     jewish_servicemans_card: orm.Mapped[str] = orm.mapped_column(
-        sa.String(64), nullable=True
+        sa.String(256), nullable=True
     )
 
     initial_burial_location: orm.Mapped[str] = orm.mapped_column(
