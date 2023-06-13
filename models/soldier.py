@@ -44,6 +44,11 @@ class Soldier(db.Model, ModelMixin):
             viewonly=True,
         ),
     )
+
+    @property
+    def soldier_awards(self):
+        return [award.name for award in self.awards]
+
     # AWS Files
     photos: orm.Mapped[SoldierPhoto] = orm.relationship(
         "SoldierPhoto",
