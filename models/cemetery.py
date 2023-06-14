@@ -36,6 +36,10 @@ class Cemetery(db.Model, ModelMixin):
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
+    amount_buried_soldiers_common: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
+    amount_buried_soldiers_jewish: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
+    amount_buried_soldiers_missing: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
+
     war_id = orm.mapped_column(sa.ForeignKey("wars.id"), nullable=True)
     _war = orm.relationship("War", viewonly=True)
 
