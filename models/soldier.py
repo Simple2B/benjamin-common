@@ -23,8 +23,7 @@ class Soldier(db.Model, ModelMixin):
     cemetery_id = orm.mapped_column(sa.ForeignKey("cemeteries.id"), nullable=True)
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
-    first_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
-    last_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
     service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=False)
 
     birth_date: orm.Mapped[dt.date] = orm.mapped_column(sa.Date, nullable=False)
