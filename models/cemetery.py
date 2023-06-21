@@ -90,7 +90,7 @@ class Cemetery(db.Model, ModelMixin):
 
         soldiers = session.execute(
             Soldier.select()
-            .where(*soldier_filter_expressions)
+            .where(*soldier_filter_expressions, Soldier.cemetery_id == self.id)
             .limit(soldier_filter.soldiers_amount)
         ).scalars()
         return s.SoldiersFiltered(title=soldier_filter.title, soldiers=list(soldiers))
