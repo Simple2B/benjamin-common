@@ -8,6 +8,8 @@ from app import schema as s
 
 from .utils import generate_uuid, ModelMixin
 from .cemetery_audio_tour import CemeteryAudioTour
+from .soldier_dashboar_filter import SoldierDashboardFilter
+from .soldier import Soldier
 
 
 class Cemetery(db.Model, ModelMixin):
@@ -36,9 +38,15 @@ class Cemetery(db.Model, ModelMixin):
 
     superintendent: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
-    amount_buried_soldiers_common: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
-    amount_buried_soldiers_jewish: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
-    amount_buried_soldiers_missing: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True)
+    amount_buried_soldiers_common: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=True
+    )
+    amount_buried_soldiers_jewish: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=True
+    )
+    amount_buried_soldiers_missing: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=True
+    )
 
     war_id = orm.mapped_column(sa.ForeignKey("wars.id"), nullable=True)
     _war = orm.relationship("War", viewonly=True)
@@ -65,3 +73,24 @@ class Cemetery(db.Model, ModelMixin):
     def json(self):
         data = s.Cemetery.from_orm(self)
         return data.json(by_alias=True)
+
+    @property
+    def filtered_soldiers(self):
+        session = orm.object_session(self)
+        soldier_filter: SoldierDashboardFilter | None = session.execute(
+            SoldierDashboardFilter.select()
+        ).scalar()
+
+        if not soldier_filter:
+            return None
+
+        soldier_filter_expressions = Soldier.generate_filter(soldier_filter)
+        if not soldier_filter_expressions:
+            return None
+
+        soldiers = session.execute(
+            Soldier.select()
+            .where(*soldier_filter_expressions, Soldier.cemetery_id == self.id)
+            .limit(soldier_filter.soldiers_amount)
+        ).scalars()
+        return s.SoldiersFiltered(title=soldier_filter.title, soldiers=list(soldiers))

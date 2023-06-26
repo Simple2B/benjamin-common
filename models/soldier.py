@@ -8,6 +8,7 @@ from app import schema as s
 from .soldier_award import SoldierAward
 from .soldier_photo import SoldierPhoto
 from .soldier_stones import SoldierStones
+from .soldier_dashboar_filter import SoldierDashboardFilter
 
 from .utils import generate_uuid, ModelMixin
 
@@ -122,6 +123,37 @@ class Soldier(db.Model, ModelMixin):
     )
 
     @property
+    def soldier_title_photo(self):
+        if self.photos:
+            return self.photos[0].aws_filepath
+
+        return None
+
+    @property
     def json(self):
         data = s.Soldier.from_orm(self)
         return data.json(by_alias=True)
+
+    @classmethod
+    def generate_filter(
+        cls, soldier_filter: SoldierDashboardFilter
+    ) -> list[sa.BinaryExpression]:
+        # sqlalchemy binary expressions list
+        sa_expressions = []
+
+        if soldier_filter.birth_date_from:
+            sa_expressions.append(cls.birth_date > soldier_filter.birth_date_from)
+
+        if soldier_filter.birth_date_to:
+            sa_expressions.append(cls.birth_date < soldier_filter.birth_date_to)
+
+        if soldier_filter.death_date_from:
+            sa_expressions.append(cls.death_date > soldier_filter.birth_date_from)
+
+        if soldier_filter.death_date_to:
+            sa_expressions.append(cls.death_date < soldier_filter.death_date_to)
+
+        if soldier_filter.birth_location:
+            sa_expressions.append(cls.birth_location == soldier_filter.birth_location)
+
+        return sa_expressions
