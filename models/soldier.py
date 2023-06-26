@@ -7,6 +7,7 @@ from app import schema as s
 
 from .soldier_award import SoldierAward
 from .soldier_photo import SoldierPhoto
+from .soldier_stones import SoldierStones
 
 from .utils import generate_uuid, ModelMixin
 
@@ -42,6 +43,12 @@ class Soldier(db.Model, ModelMixin):
             "soldier",
             viewonly=True,
         ),
+    )
+
+    stones: orm.Mapped[SoldierStones] = orm.relationship(
+        "SoldierStones",
+        lazy="select",
+        cascade="all, delete",
     )
 
     @property
