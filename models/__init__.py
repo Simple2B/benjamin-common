@@ -8,3 +8,4 @@ from .award import Award
 from .soldier_award import SoldierAward
 from .soldier_photo import SoldierPhoto
 from .soldier_dashboar_filter import SoldierDashboardFilter
+from .soldier_stones import SoldierStones
