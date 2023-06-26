@@ -7,7 +7,7 @@ from app import schema as s
 
 from .soldier_award import SoldierAward
 from .soldier_photo import SoldierPhoto
-from .soldier_stones import SoldierStones
+from .soldier_stones import SoldierStone
 from .soldier_dashboar_filter import SoldierDashboardFilter
 
 from .utils import generate_uuid, ModelMixin
@@ -46,10 +46,14 @@ class Soldier(db.Model, ModelMixin):
         ),
     )
 
-    stones: orm.Mapped[SoldierStones] = orm.relationship(
-        "SoldierStones",
+    stones: orm.Mapped[SoldierStone] = orm.relationship(
+        "SoldierStone",
         lazy="select",
         cascade="all, delete",
+    )
+    verified_stones: orm.Mapped[SoldierStone] = orm.relationship(
+        "SoldierStone",
+        primaryjoin="and_(SoldierStone.soldier_id==Soldier.id, SoldierStone.is_verified==True)",
     )
 
     @property
