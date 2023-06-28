@@ -11,7 +11,7 @@ class SoldierAward(db.Model, ModelMixin):
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
-    award_id: orm.Mapped[str] = orm.mapped_column(
+    award_id: orm.Mapped[int] = orm.mapped_column(
         sa.ForeignKey("awards.id"),
         nullable=False,
     )

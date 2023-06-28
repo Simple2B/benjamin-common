@@ -6,6 +6,7 @@ from app.database import db
 from app import schema as s
 
 from .soldier_award import SoldierAward
+from .soldier_rank import SoldierRank
 from .soldier_photo import SoldierPhoto
 from .soldier_stones import SoldierStone
 from .soldier_dashboar_filter import SoldierDashboardFilter
@@ -26,6 +27,7 @@ class Soldier(db.Model, ModelMixin):
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
+    suffix: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=False)
 
     birth_date: orm.Mapped[dt.date] = orm.mapped_column(sa.Date, nullable=False)
@@ -36,8 +38,19 @@ class Soldier(db.Model, ModelMixin):
         sa.String(256), nullable=True
     )
 
+    parents: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
+
     awards: orm.Mapped[SoldierAward] = orm.relationship(
         "SoldierAward",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "soldier",
+            viewonly=True,
+        ),
+    )
+    ranks: orm.Mapped[SoldierRank] = orm.relationship(
+        "SoldierRank",
         lazy="select",
         cascade="all, delete",
         backref=orm.backref(
@@ -74,6 +87,9 @@ class Soldier(db.Model, ModelMixin):
     @property
     def photo_paths(self):
         return [photo.aws_filepath for photo in self.photos]
+
+    main_photo: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+    hir_image: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
 
     soldier_audio_tour: orm.Mapped[str] = orm.mapped_column(
         sa.String(256),
@@ -117,6 +133,7 @@ class Soldier(db.Model, ModelMixin):
     jewish_servicemans_card: orm.Mapped[str] = orm.mapped_column(
         sa.String(256), nullable=True
     )
+    ww_draft_card: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
 
     initial_burial_location: orm.Mapped[str] = orm.mapped_column(
         sa.String(64), nullable=True
