@@ -27,6 +27,7 @@ class Soldier(db.Model, ModelMixin):
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
+    el_maleh: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     suffix: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=False)
 
