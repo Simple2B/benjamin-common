@@ -4,6 +4,7 @@ from sqlalchemy import orm
 from app import schema as s
 from app.database import db
 from .utils import ModelMixin
+from .soldier_state_entered_service import SoldierStateEnteredFrom
 
 
 class State(db.Model, ModelMixin):
@@ -14,6 +15,16 @@ class State(db.Model, ModelMixin):
     name: orm.Mapped[str] = orm.mapped_column(
         sa.String(64),
         nullable=False,
+    )
+
+    soldier_states_service_from: orm.Mapped[SoldierStateEnteredFrom] = orm.relationship(
+        "SoldierStateEnteredFrom",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "state",
+            viewonly=True,
+        ),
     )
 
     @property

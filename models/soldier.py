@@ -10,6 +10,7 @@ from .soldier_rank import SoldierRank
 from .soldier_photo import SoldierPhoto
 from .soldier_stones import SoldierStone
 from .soldier_dashboar_filter import SoldierDashboardFilter
+from .soldier_state_entered_service import SoldierStateEnteredFrom
 
 from .utils import generate_uuid, ModelMixin
 
@@ -52,6 +53,15 @@ class Soldier(db.Model, ModelMixin):
     )
     ranks: orm.Mapped[SoldierRank] = orm.relationship(
         "SoldierRank",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "soldier",
+            viewonly=True,
+        ),
+    )
+    states_entered_service_from: orm.Mapped[SoldierStateEnteredFrom] = orm.relationship(
+        "SoldierStateEnteredFrom",
         lazy="select",
         cascade="all, delete",
         backref=orm.backref(
@@ -125,9 +135,6 @@ class Soldier(db.Model, ModelMixin):
             "latitude": self.burial_location_latitude,
         }
 
-    state_entered_service_from: orm.Mapped[str] = orm.mapped_column(
-        sa.String(64), nullable=True
-    )
     assignment: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
     position: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=True)
 
