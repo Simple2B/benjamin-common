@@ -2,17 +2,15 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.database import db
-
 from .utils import ModelMixin
 
 
-class SoldierAward(db.Model, ModelMixin):
-    __tablename__ = "soldier_awards"
+class SoldierRank(db.Model, ModelMixin):
+    __tablename__ = "soldier_ranks"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-
-    award_id: orm.Mapped[int] = orm.mapped_column(
-        sa.ForeignKey("awards.id"),
+    rank_id: orm.Mapped[int] = orm.mapped_column(
+        sa.ForeignKey("ranks.id"),
         nullable=False,
     )
     soldier_id: orm.Mapped[int] = orm.mapped_column(
@@ -22,4 +20,4 @@ class SoldierAward(db.Model, ModelMixin):
 
     @property
     def name(self):
-        return self.award.name
+        return self.rank.name
