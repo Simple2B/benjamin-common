@@ -11,3 +11,4 @@ from .award import Award
 from .soldier_award import SoldierAward
 from .rank import Rank
 from .soldier_rank import SoldierRank
+from .state import State
