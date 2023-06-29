@@ -11,6 +11,7 @@ from .soldier_photo import SoldierPhoto
 from .soldier_stones import SoldierStone
 from .soldier_dashboar_filter import SoldierDashboardFilter
 from .soldier_state_entered_service import SoldierStateEnteredFrom
+from .soldier_military_unit import SoldierMilitaryUnit
 
 from .utils import generate_uuid, ModelMixin
 
@@ -62,6 +63,15 @@ class Soldier(db.Model, ModelMixin):
     )
     states_entered_service_from: orm.Mapped[SoldierStateEnteredFrom] = orm.relationship(
         "SoldierStateEnteredFrom",
+        lazy="select",
+        cascade="all, delete",
+        backref=orm.backref(
+            "soldier",
+            viewonly=True,
+        ),
+    )
+    military_units: orm.Mapped[SoldierMilitaryUnit] = orm.relationship(
+        "SoldierMilitaryUnit",
         lazy="select",
         cascade="all, delete",
         backref=orm.backref(
