@@ -13,3 +13,5 @@ from .rank import Rank
 from .soldier_rank import SoldierRank
 from .state import State
 from .soldier_state_entered_service import SoldierStateEnteredFrom
+from .military_unit import MilitaryUnit
+from .soldier_unit import SoldierUnit
