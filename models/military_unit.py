@@ -4,7 +4,7 @@ from app.database import db
 
 from app import schema as s
 from .utils import ModelMixin
-from .soldier_unit import SoldierUnit
+from .soldier_military_unit import SoldierMilitaryUnit
 
 
 class MilitaryUnit(db.Model, ModelMixin):
@@ -13,8 +13,8 @@ class MilitaryUnit(db.Model, ModelMixin):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
 
-    soldier_units: orm.Mapped[SoldierUnit] = orm.relationship(
-        "SoldierUnit",
+    soldier_military_units: orm.Mapped[SoldierMilitaryUnit] = orm.relationship(
+        "SoldierMilitaryUnit",
         lazy="select",
         cascade="all, delete",
         backref=orm.backref(
