@@ -109,7 +109,7 @@ class Soldier(db.Model, ModelMixin):
     )
     verified_messages: orm.Mapped[SoldierMessage] = orm.relationship(
         "SoldierMessage",
-        primaryjoin="and_(SoldierMessage.soldier_id==Soldier.id, SoldierMessage.message_type=='UNASSIGNED')",
+        primaryjoin="and_(SoldierMessage.soldier_id==Soldier.id, SoldierMessage.message_type==3)",
     )
 
     @property
