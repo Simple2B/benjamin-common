@@ -13,6 +13,7 @@ from .soldier_dashboar_filter import SoldierDashboardFilter
 from .soldier_state_entered_service import SoldierStateEnteredFrom
 from .soldier_military_unit import SoldierMilitaryUnit
 from .soldier_position import SoldierPosition
+from .soldier_message import SoldierMessage
 
 from .utils import generate_uuid, ModelMixin
 
@@ -99,6 +100,16 @@ class Soldier(db.Model, ModelMixin):
     verified_stones: orm.Mapped[SoldierStone] = orm.relationship(
         "SoldierStone",
         primaryjoin="and_(SoldierStone.soldier_id==Soldier.id, SoldierStone.is_verified==True)",
+    )
+
+    messages: orm.Mapped[SoldierMessage] = orm.relationship(
+        "SoldierMessage",
+        lazy="select",
+        cascade="all, delete",
+    )
+    verified_messages: orm.Mapped[SoldierMessage] = orm.relationship(
+        "SoldierMessage",
+        primaryjoin="and_(SoldierMessage.soldier_id==Soldier.id, SoldierMessage.message_type==3)",
     )
 
     @property
