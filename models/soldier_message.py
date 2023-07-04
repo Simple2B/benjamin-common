@@ -21,7 +21,6 @@ class SoldierMessage(db.Model):
         sa.Enum(SoldierMessageType), nullable=False
     )
     sender_email: orm.Mapped[str] = orm.mapped_column(sa.String(256))
-    is_verified: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
 
     soldier_id: orm.Mapped[int] = orm.mapped_column(
         sa.ForeignKey("soldiers.id"),
