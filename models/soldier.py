@@ -13,7 +13,7 @@ from .soldier_dashboar_filter import SoldierDashboardFilter
 from .soldier_state_entered_service import SoldierStateEnteredFrom
 from .soldier_military_unit import SoldierMilitaryUnit
 from .soldier_position import SoldierPosition
-from .soldier_message import SoldierMessage
+from .soldier_message import SoldierMessage, SoldierMessageType
 
 from .utils import generate_uuid, ModelMixin
 
@@ -107,14 +107,19 @@ class Soldier(db.Model, ModelMixin):
         lazy="select",
         cascade="all, delete",
     )
-    verified_messages: orm.Mapped[SoldierMessage] = orm.relationship(
-        "SoldierMessage",
-        primaryjoin="and_(SoldierMessage.soldier_id==Soldier.id, SoldierMessage.message_type==3)",
-    )
 
     @property
     def soldier_awards(self):
         return [award.name for award in self.awards]
+
+    @property
+    def verified_messages(self):
+        return list(
+            filter(
+                lambda message: message.message_type != SoldierMessageType.UNASSIGNED,
+                self.messages,
+            )
+        )
 
     # AWS Files
     photos: orm.Mapped[SoldierPhoto] = orm.relationship(
