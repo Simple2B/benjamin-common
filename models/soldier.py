@@ -14,6 +14,7 @@ from .soldier_state_entered_service import SoldierStateEnteredFrom
 from .soldier_military_unit import SoldierMilitaryUnit
 from .soldier_position import SoldierPosition
 from .guardian_of_heroes import GuardianOfHeroes
+from .soldier_message import SoldierMessage, SoldierMessageType
 
 from .utils import generate_uuid, ModelMixin
 
@@ -108,10 +109,24 @@ class Soldier(db.Model, ModelMixin):
         lazy="select",
         cascade="all, delete",
     )
+    messages: orm.Mapped[SoldierMessage] = orm.relationship(
+        "SoldierMessage",
+        lazy="select",
+        cascade="all, delete",
+    )
 
     @property
     def soldier_awards(self):
         return [award.name for award in self.awards]
+
+    @property
+    def verified_messages(self):
+        return list(
+            filter(
+                lambda message: message.message_type != SoldierMessageType.UNASSIGNED,
+                self.messages,
+            )
+        )
 
     # AWS Files
     photos: orm.Mapped[SoldierPhoto] = orm.relationship(
@@ -215,5 +230,3 @@ class Soldier(db.Model, ModelMixin):
             sa_expressions.append(cls.birth_location == soldier_filter.birth_location)
 
         return sa_expressions
-
-
