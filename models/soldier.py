@@ -13,6 +13,7 @@ from .soldier_dashboar_filter import SoldierDashboardFilter
 from .soldier_state_entered_service import SoldierStateEnteredFrom
 from .soldier_military_unit import SoldierMilitaryUnit
 from .soldier_position import SoldierPosition
+from .guardian_of_heroes import GuardianOfHeroes
 from .soldier_message import SoldierMessage, SoldierMessageType
 
 from .utils import generate_uuid, ModelMixin
@@ -30,6 +31,7 @@ class Soldier(db.Model, ModelMixin):
     cemetery_id = orm.mapped_column(sa.ForeignKey("cemeteries.id"), nullable=True)
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    # TODO split by first name, last name
     name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
     el_maleh: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     suffix: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
@@ -102,6 +104,11 @@ class Soldier(db.Model, ModelMixin):
         primaryjoin="and_(SoldierStone.soldier_id==Soldier.id, SoldierStone.is_verified==True)",
     )
 
+    guardians_of_heroes: orm.Mapped[GuardianOfHeroes] = orm.relationship(
+        "GuardianOfHeroes",
+        lazy="select",
+        cascade="all, delete",
+    )
     messages: orm.Mapped[SoldierMessage] = orm.relationship(
         "SoldierMessage",
         lazy="select",

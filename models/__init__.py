@@ -17,4 +17,5 @@ from .military_unit import MilitaryUnit
 from .soldier_military_unit import SoldierMilitaryUnit
 from .position import Position
 from .soldier_position import SoldierPosition
+from .guardian_of_heroes import GuardianOfHeroes
 from .soldier_message import SoldierMessage, SoldierMessageType
