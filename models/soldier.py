@@ -46,6 +46,9 @@ class Soldier(db.Model, ModelMixin):
     )
 
     parents: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
+    is_headstone_changed: orm.Mapped[bool] = orm.mapped_column(
+        sa.Boolean, default=False
+    )
 
     awards: orm.Mapped[SoldierAward] = orm.relationship(
         "SoldierAward",
