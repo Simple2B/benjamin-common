@@ -75,6 +75,17 @@ class Cemetery(db.Model, ModelMixin):
         return data.json(by_alias=True)
 
     @property
+    def graves_coordinates(self):
+        session = orm.object_session(self)
+        graves_coordinates = session.execute(
+            Soldier.select()
+            .where(Soldier.cemetery_id == self.id)
+            .where(Soldier.burial_location_latitude.isnot(None))
+            .where(Soldier.burial_location_longitude.isnot(None))
+        ).scalars()
+        return graves_coordinates
+
+    @property
     def filtered_soldiers(self):
         session = orm.object_session(self)
         soldier_filter: SoldierDashboardFilter | None = session.execute(
