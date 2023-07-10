@@ -123,6 +123,25 @@ class Soldier(db.Model, ModelMixin):
         return [award.name for award in self.awards]
 
     @property
+    def soldier_states_entered_from(self):
+        return [
+            state_entered_service_from.name
+            for state_entered_service_from in self.states_entered_service_from
+        ]
+
+    @property
+    def soldier_positions(self):
+        return [position.name for position in self.positions]
+
+    @property
+    def soldier_ranks(self):
+        return [rank.name for rank in self.ranks]
+
+    @property
+    def soldier_military_unit(self):
+        return [unit.name for unit in self.military_units]
+
+    @property
     def verified_messages(self):
         return list(
             filter(
