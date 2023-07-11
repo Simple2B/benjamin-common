@@ -32,7 +32,8 @@ class Soldier(db.Model, ModelMixin):
     cemetery_id = orm.mapped_column(sa.ForeignKey("cemeteries.id"), nullable=True)
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
+    first_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
+    last_name: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     el_maleh: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     suffix: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     service_branch: orm.Mapped[str] = orm.mapped_column(sa.String(124), nullable=False)
@@ -46,6 +47,9 @@ class Soldier(db.Model, ModelMixin):
     )
 
     parents: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
+    is_headstone_changed: orm.Mapped[bool] = orm.mapped_column(
+        sa.Boolean, default=False
+    )
 
     awards: orm.Mapped[SoldierAward] = orm.relationship(
         "SoldierAward",
@@ -123,6 +127,25 @@ class Soldier(db.Model, ModelMixin):
     @property
     def soldier_awards(self):
         return [award.name for award in self.awards]
+
+    @property
+    def soldier_states_entered_from(self):
+        return [
+            state_entered_service_from.name
+            for state_entered_service_from in self.states_entered_service_from
+        ]
+
+    @property
+    def soldier_positions(self):
+        return [position.name for position in self.positions]
+
+    @property
+    def soldier_ranks(self):
+        return [rank.name for rank in self.ranks]
+
+    @property
+    def soldier_military_unit(self):
+        return [unit.name for unit in self.military_units]
 
     @property
     def verified_messages(self):
