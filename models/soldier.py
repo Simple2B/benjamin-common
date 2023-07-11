@@ -12,7 +12,6 @@ from .soldier_stones import SoldierStone
 from .soldier_dashboar_filter import SoldierDashboardFilter
 from .soldier_state_entered_service import SoldierStateEnteredFrom
 from .soldier_military_unit import SoldierMilitaryUnit
-from .soldier_position import SoldierPosition
 from .guardian_of_heroes import GuardianOfHeroes
 from .soldier_message import SoldierMessage, SoldierMessageType
 
@@ -80,16 +79,6 @@ class Soldier(db.Model, ModelMixin):
     )
     military_units: orm.Mapped[SoldierMilitaryUnit] = orm.relationship(
         "SoldierMilitaryUnit",
-        lazy="select",
-        cascade="all, delete",
-        backref=orm.backref(
-            "soldier",
-            viewonly=True,
-        ),
-    )
-
-    positions: orm.Mapped[SoldierPosition] = orm.relationship(
-        "SoldierPosition",
         lazy="select",
         cascade="all, delete",
         backref=orm.backref(
