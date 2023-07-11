@@ -19,6 +19,7 @@ from .soldier_message import SoldierMessage, SoldierMessageType
 from .utils import generate_uuid, ModelMixin
 
 
+# TODO add place of death
 class Soldier(db.Model, ModelMixin):
     __tablename__ = "soldiers"
 
@@ -31,7 +32,6 @@ class Soldier(db.Model, ModelMixin):
     cemetery_id = orm.mapped_column(sa.ForeignKey("cemeteries.id"), nullable=True)
 
     service_number: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
-    # TODO split by first name, last name
     name: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
     el_maleh: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     suffix: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
@@ -109,6 +109,11 @@ class Soldier(db.Model, ModelMixin):
         lazy="select",
         cascade="all, delete",
     )
+
+    @property
+    def guardians(self):
+        return [guard.name for guard in self.guardians_of_heroes]
+
     messages: orm.Mapped[SoldierMessage] = orm.relationship(
         "SoldierMessage",
         lazy="select",
