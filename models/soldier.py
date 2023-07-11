@@ -125,10 +125,6 @@ class Soldier(db.Model, ModelMixin):
         ]
 
     @property
-    def soldier_positions(self):
-        return [position.name for position in self.positions]
-
-    @property
     def soldier_ranks(self):
         return [rank.name for rank in self.ranks]
 
