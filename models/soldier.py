@@ -111,6 +111,7 @@ class Soldier(db.Model, ModelMixin):
         "SoldierMessage",
         lazy="select",
         cascade="all, delete",
+        backref="soldier",
     )
 
     @property
@@ -158,6 +159,7 @@ class Soldier(db.Model, ModelMixin):
 
     main_photo: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
     hir_image: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+    headstone_photo: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
 
     soldier_audio_tour: orm.Mapped[str] = orm.mapped_column(
         sa.String(256),
