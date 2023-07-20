@@ -236,7 +236,7 @@ class Soldier(db.Model, ModelMixin):
             sa_expressions.append(cls.birth_date < soldier_filter.birth_date_to)
 
         if soldier_filter.death_date_from:
-            sa_expressions.append(cls.death_date > soldier_filter.birth_date_from)
+            sa_expressions.append(cls.death_date > soldier_filter.death_date_from)
 
         if soldier_filter.death_date_to:
             sa_expressions.append(cls.death_date < soldier_filter.death_date_to)
