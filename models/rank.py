@@ -15,7 +15,10 @@ class Rank(db.Model, ModelMixin):
 
     name: orm.Mapped[str] = orm.mapped_column(
         sa.String(64),
-        nullable=False,
+    )
+
+    abbreviation: orm.Mapped[str] = orm.mapped_column(
+        sa.String(64),
     )
 
     soldier_ranks: orm.Mapped[SoldierRank] = orm.relationship(
