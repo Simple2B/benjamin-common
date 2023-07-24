@@ -46,6 +46,8 @@ class Soldier(db.Model, ModelMixin):
     )
     is_status_pow: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
 
+    unit: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+
     parents: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     is_headstone_changed: orm.Mapped[bool] = orm.mapped_column(
         sa.Boolean, default=False
