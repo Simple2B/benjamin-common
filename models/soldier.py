@@ -62,7 +62,7 @@ class Soldier(db.Model, ModelMixin):
             viewonly=True,
         ),
     )
-    ranks: orm.Mapped[SoldierRank] = orm.relationship(
+    soldier_ranks: orm.Mapped[SoldierRank] = orm.relationship(
         "SoldierRank",
         lazy="select",
         cascade="all, delete",
@@ -71,6 +71,7 @@ class Soldier(db.Model, ModelMixin):
             viewonly=True,
         ),
     )
+
     states_entered_service_from: orm.Mapped[SoldierStateEnteredFrom] = orm.relationship(
         "SoldierStateEnteredFrom",
         lazy="select",
@@ -129,8 +130,8 @@ class Soldier(db.Model, ModelMixin):
         ]
 
     @property
-    def soldier_ranks(self):
-        return [rank.name for rank in self.ranks]
+    def ranks(self):
+        return [soldier_rank.rank for soldier_rank in self.soldier_ranks]
 
     @property
     def soldier_military_unit(self):
