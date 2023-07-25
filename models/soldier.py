@@ -170,6 +170,10 @@ class Soldier(db.Model, ModelMixin):
     )
 
     kia_telegram: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+    ceremony_video_link: orm.Mapped[str] = orm.mapped_column(
+        sa.String(256),
+        nullable=True,
+    )
     replacement_ceremony_video: orm.Mapped[str] = orm.mapped_column(
         sa.String(256), nullable=True
     )
